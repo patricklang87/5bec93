@@ -8,7 +8,9 @@ const Messages = (props) => {
 
 	const sortedMessages = useMemo(() => {
 		return messages.sort((a, b) => {
-			return a.createdAt > b.createdAt;
+			const dateA = new Date(a.createdAt);
+			const dateB = new Date(b.createdAt);
+			return dateA - dateB;
 		});
 	}, [messages]);
 
