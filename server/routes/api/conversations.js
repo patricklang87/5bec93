@@ -18,7 +18,7 @@ router.get("/", async (req, res, next) => {
           user2Id: userId,
         },
       },
-      attributes: ["id"],
+      attributes: ["id", "viewedAt"],
       order: [[Message, "createdAt", "ASC"]],
       include: [
         { model: Message, order: ["createdAt", "ASC"] },
@@ -47,7 +47,7 @@ router.get("/", async (req, res, next) => {
       ],
     });
 
-    console.log(conversations);
+    console.log("conversations", conversations);
 
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
