@@ -1,5 +1,3 @@
-import { byMostRecent } from "./helpers/sortingHelper";
-
 export const addMessageToStore = (state, payload) => {
   const { message, sender } = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
@@ -13,17 +11,18 @@ export const addMessageToStore = (state, payload) => {
     return [newConvo, ...state];
   }
 
-  return state.map((convo) => {
+  let newState = [];
+  state.forEach((convo) => {
     if (convo.id === message.conversationId) {
       const newConvo = { ...convo };
 			newConvo.messages = [...convo.messages, message];
 			newConvo.latestMessageText = message.text;
-			return newConvo;
+      newState = [newConvo, ...newState];
     } else {
-      return convo;
+      newState = [...newState, convo];
     }
-  })
-  .sort(byMostRecent);
+  });
+  return newState;
 };
 
 export const addOnlineUserToStore = (state, id) => {
@@ -71,15 +70,17 @@ export const addSearchedUsersToStore = (state, users) => {
 };
 
 export const addNewConvoToStore = (state, recipientId, message) => {
-  return state.map((convo) => {
+  let newState = [];
+  state.forEach((convo) => {
     if (convo.otherUser.id === recipientId) {
       const newConvo = { ...convo };
-			newConvo.id = message.conversationId;
+      newConvo.id = message.conversationId;
 			newConvo.messages = [...convo.messages, message];
 			newConvo.latestMessageText = message.text;
-			return newConvo;
+      newState = [newConvo, ...newState];
     } else {
-      return convo;
+      newState = [...newState, convo];
     }
-  }).sort(byMostRecent);
+  });
+  return newState;
 };
