@@ -48,6 +48,10 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("clear-unread", (data) => {
+    socket.broadcast.emit("clear-unread", data);
+  });
+
   socket.on("logout", (id) => {
     if (onlineUsers.includes(id)) {
       userIndex = onlineUsers.indexOf(id);
