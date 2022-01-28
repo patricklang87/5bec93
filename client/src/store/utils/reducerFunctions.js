@@ -84,3 +84,15 @@ export const addNewConvoToStore = (state, recipientId, message) => {
   });
   return newState;
 };
+
+export const setUnreadMessages = (state, conversationId, unreadMsgs) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const newConvo = { ...convo };
+      newConvo.unreadMsgs = unreadMsgs;
+      return newConvo;
+    } else {
+      return convo;
+    }
+  });
+}

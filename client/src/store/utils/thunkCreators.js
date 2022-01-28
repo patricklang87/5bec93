@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  setUnreadMsgs
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 import { byMostRecent } from "./helpers/sortingHelper";
@@ -74,6 +75,7 @@ export const fetchConversations = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/api/conversations");
     const orderedData = data.sort(byMostRecent);
+    console.log("fetchConversations", orderedData);
     dispatch(gotConversations(orderedData));
   } catch (error) {
     console.error(error);
@@ -85,11 +87,17 @@ const saveMessage = async (body) => {
   return data;
 };
 
-const sendMessage = (data, body) => {
+const incrementUnread = async (conversationId) => {
+  const { data } = await axios.put(`/api/conversations/incrementUnread/${conversationId}`);
+  return data[0][0][0].unreadMsgs;
+}
+
+const sendMessage = (data, body, unreadCount) => {
   socket.emit("new-message", {
     message: data.message,
     recipientId: body.recipientId,
     sender: data.sender,
+    unreadCount
   });
 };
 
@@ -98,14 +106,18 @@ const sendMessage = (data, body) => {
 export const postMessage = (body) => async (dispatch) => {
   try {
     const data = await saveMessage(body);
+    const conversationId = data.message.conversationId;
+    const unreadCount = await incrementUnread(conversationId);
 
     if (!body.conversationId) {
       dispatch(addConversation(body.recipientId, data.message));
     } else {
+      console.log("posting new msg")
       dispatch(setNewMessage(data.message));
+      dispatch(setUnreadMsgs(body.conversationId, unreadCount));
     }
 
-    sendMessage(data, body);
+    sendMessage(data, body, unreadCount);
   } catch (error) {
     console.error(error);
   }
@@ -119,3 +131,15 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     console.error(error);
   }
 };
+
+//Used to clear unreadMsgs when a user selects a new active conversation
+export const clearUnreadMsgs = (conversationId) => async (dispatch) => {
+  try {
+    const { data } = await axios.put(`/api/conversations/clearUnread/${conversationId}`);
+    console.log("clearedUnreadMesgs", data)
+    dispatch(setUnreadMsgs(conversationId, 0));
+    //this will also include call emit in socket.io so the other viewer can immediately see that a message has been read
+  } catch (error) {
+    console.log(error);
+  }
+}
