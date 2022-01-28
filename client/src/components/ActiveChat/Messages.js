@@ -9,7 +9,6 @@ const Messages = (props) => {
   const [lastReadMsgIndex, setLastReadMsgIndex] = useState(messages.length - 1);
 
   useEffect(() => {
-    console.log("last read message index", messages.length - unreadMsgs - 1);
     setLastReadMsgIndex(messages.length - unreadMsgs - 1);
   }, [messages, unreadMsgs]);
 

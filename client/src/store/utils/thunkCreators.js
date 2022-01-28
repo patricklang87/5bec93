@@ -75,7 +75,6 @@ export const fetchConversations = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/api/conversations");
     const orderedData = data.sort(byMostRecent);
-    console.log("fetchConversations", orderedData);
     dispatch(gotConversations(orderedData));
   } catch (error) {
     console.error(error);
@@ -112,7 +111,6 @@ export const postMessage = (body) => async (dispatch) => {
     if (!body.conversationId) {
       dispatch(addConversation(body.recipientId, data.message));
     } else {
-      console.log("posting new msg")
       dispatch(setNewMessage(data.message));
       dispatch(setUnreadMsgs(body.conversationId, unreadCount));
     }
@@ -136,9 +134,11 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
 export const clearUnreadMsgs = (conversationId) => async (dispatch) => {
   try {
     const { data } = await axios.put(`/api/conversations/clearUnread/${conversationId}`);
-    console.log("clearedUnreadMesgs", data)
+    console.log("clear unread msgs data", data );
     dispatch(setUnreadMsgs(conversationId, 0));
     //this will also include call emit in socket.io so the other viewer can immediately see that a message has been read
+
+    socket.emit("clear-unread", conversationId);
   } catch (error) {
     console.log(error);
   }

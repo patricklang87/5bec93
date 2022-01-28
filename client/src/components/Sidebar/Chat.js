@@ -34,7 +34,6 @@ const Chat = (props) => {
 	}, [messages, otherUser.id]);
 
 	const handleClick = async (conversation) => {
-		console.log(conversation);
 		await props.setActiveChat(conversation.otherUser.username);
 
 		//if the last message was sent by the other user, the message count will be cleared when the corresponding conversation is activated

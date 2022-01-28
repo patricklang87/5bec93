@@ -4,7 +4,7 @@ import {
   addSearchedUsersToStore,
   removeOfflineUserFromStore,
   addMessageToStore,
-  setUnreadMessages
+  setUnreadMessagesInStore
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -71,7 +71,6 @@ export const addConversation = (recipientId, newMessage) => {
 
 // set the unread messages count when the count is incremented or cleared
 export const setUnreadMsgs = (conversationId, unreadMsgs) => {
-  console.log("conversations", conversationId, unreadMsgs);
   return {
     type: SET_UNREAD_MESSAGES,
     payload: { conversationId, unreadMsgs }
@@ -103,7 +102,7 @@ const reducer = (state = [], action) => {
         action.payload.newMessage
       );
     case SET_UNREAD_MESSAGES:
-      return setUnreadMessages(
+      return setUnreadMessagesInStore(
         state,
         action.payload.conversationId,
         action.payload.unreadMsgs
