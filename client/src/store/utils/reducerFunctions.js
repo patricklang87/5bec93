@@ -86,7 +86,6 @@ export const addNewConvoToStore = (state, recipientId, message) => {
 };
 
 export const setUnreadMessagesInStore = (state, conversationId, unreadMsgs) => {
-  console.log("changing unread message count", unreadMsgs)
   return state.map((convo) => {
     if (convo.id === conversationId) {
       const newConvo = { ...convo };

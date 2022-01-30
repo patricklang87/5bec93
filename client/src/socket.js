@@ -1,5 +1,6 @@
 import io from "socket.io-client";
 import store from "./store";
+import { clearUnreadInDB } from "./store/utils/thunkCreators";
 import {
 	setNewMessage,
 	removeOfflineUser,
@@ -20,14 +21,21 @@ socket.on("connect", () => {
 		store.dispatch(removeOfflineUser(id));
 	});
 
-	socket.on("new-message", (data) => {
-    console.log("socket new message received")
+	socket.on("new-message", async (data) => {
 		store.dispatch(setNewMessage(data.message, data.sender));
-    store.dispatch(setUnreadMsgs(data.message.conversationId, data.unreadCount));
+
+    //check current active chat. If the current active chat is the sender, clear unread messages for that conversation in the DB, in the local store, and in the sender's store. Otherwise, set the new unread message count in the local store.
+    if (store.getState().activeConversation.otherUserId === data.message.senderId) {
+      clearUnreadInDB(data.message.conversationId);
+      store.dispatch(setUnreadMsgs(data.message.conversationId, 0));
+      socket.emit("clear-unread", data.message.conversationId);
+    } else {
+      store.dispatch(setUnreadMsgs(data.message.conversationId, data.unreadCount));
+    }
 	});
 
   socket.on("clear-unread", (data) => {
-    console.log("recieved socket clear unread");
+    console.log("recieved socket clear unread", store.getState());
     store.dispatch(setUnreadMsgs(data, 0));
   });
 });

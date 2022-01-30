@@ -91,6 +91,10 @@ const incrementUnread = async (conversationId) => {
   return data[0][0][0].unreadMsgs;
 }
 
+export const clearUnreadInDB = async (conversationId) => {
+  await axios.put(`/api/conversations/clearUnread/${conversationId}`);
+}
+
 const sendMessage = (data, body, unreadCount) => {
   socket.emit("new-message", {
     message: data.message,
@@ -133,11 +137,8 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
 //Used to clear unreadMsgs when a user selects a new active conversation
 export const clearUnreadMsgs = (conversationId) => async (dispatch) => {
   try {
-    const { data } = await axios.put(`/api/conversations/clearUnread/${conversationId}`);
-    console.log("clear unread msgs data", data );
+    clearUnreadInDB(conversationId);
     dispatch(setUnreadMsgs(conversationId, 0));
-    //this will also include call emit in socket.io so the other viewer can immediately see that a message has been read
-
     socket.emit("clear-unread", conversationId);
   } catch (error) {
     console.log(error);
