@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
 
 const SenderBubble = (props) => {
 	const classes = useStyles();
-	const { time, text, otherUser, lastReadMsgIndex, msgIndex } = props;
+	const { time, text, otherUser, readIndicatorIndex, msgIndex } = props;
 
 	return (
 		<Box className={classes.root}>
@@ -42,7 +42,7 @@ const SenderBubble = (props) => {
 			<Box className={classes.bubble}>
 				<Typography className={classes.text}>{text}</Typography>
 			</Box>
-			{msgIndex === lastReadMsgIndex && (
+			{msgIndex === readIndicatorIndex && (
 				<Avatar
 					alt={otherUser.username}
 					src={otherUser.photoUrl}
