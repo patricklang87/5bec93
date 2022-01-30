@@ -24,7 +24,7 @@ const NewMessageCount = (props) => {
 	return (
 		<Box className={classes.root}>
 			<Typography className={classes.text}>
-				{conversation.unreadMsgs}
+				{conversation.unreadMessages}
 			</Typography>
 		</Box>
 	);

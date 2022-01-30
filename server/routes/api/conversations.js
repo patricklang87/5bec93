@@ -18,7 +18,7 @@ router.get("/", async (req, res, next) => {
 					user2Id: userId,
 				},
 			},
-			attributes: ["id", "unreadMsgs"],
+			attributes: ["id", "unreadMessages"],
 			order: [[Message, "createdAt", "ASC"]],
 			include: [
 				{ model: Message, order: ["createdAt", "ASC"] },
@@ -83,7 +83,7 @@ router.get("/", async (req, res, next) => {
 router.put("/incrementUnread/:convoId", async (req, res, next) => {
   const convoId = req.params.convoId;
 	try {
-		const updatedConversation = await Conversation.increment("unreadMsgs", {
+		const updatedConversation = await Conversation.increment("unreadMessages", {
 			where: { id: convoId },
 		});
 		res.json(updatedConversation);
@@ -98,7 +98,7 @@ router.put("/clearUnread/:convoId", async (req, res, next) => {
 	try {
 		const updatedConversation = await Conversation.update(
 			{
-				unreadMsgs: 0,
+				unreadMessages: 0,
 			},
 			{
 				where: { id: convoId },

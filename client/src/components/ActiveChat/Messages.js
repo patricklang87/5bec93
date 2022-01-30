@@ -5,12 +5,12 @@ import moment from "moment";
 
 const Messages = (props) => {
 	const { conversation, userId } = props;
-  const { messages, otherUser, unreadMsgs } = conversation;
+  const { messages, otherUser, unreadMessages } = conversation;
   const [lastReadMsgIndex, setLastReadMsgIndex] = useState(messages.length - 1);
 
   useEffect(() => {
-    setLastReadMsgIndex(messages.length - unreadMsgs - 1);
-  }, [messages, unreadMsgs]);
+    setLastReadMsgIndex(messages.length - unreadMessages - 1);
+  }, [messages, unreadMessages]);
 
 	return (
 		<Box>
