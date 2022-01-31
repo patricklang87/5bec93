@@ -2,24 +2,24 @@ import io from "socket.io-client";
 import store from "./store";
 import { clearUnreadInDB } from "./store/utils/thunkCreators";
 import {
-  setNewMessage,
-  removeOfflineUser,
-  addOnlineUser,
-  setUnreadMessages,
+	setNewMessage,
+	removeOfflineUser,
+	addOnlineUser,
+	setUnreadMessages,
 } from "./store/conversations";
 
 const socket = io(window.location.origin);
 
 socket.on("connect", () => {
-  console.log("connected to server");
+	console.log("connected to server");
 
-  socket.on("add-online-user", (id) => {
-    store.dispatch(addOnlineUser(id));
-  });
+	socket.on("add-online-user", (id) => {
+		store.dispatch(addOnlineUser(id));
+	});
 
-  socket.on("remove-offline-user", (id) => {
-    store.dispatch(removeOfflineUser(id));
-  });
+	socket.on("remove-offline-user", (id) => {
+		store.dispatch(removeOfflineUser(id));
+	});
 
 	socket.on("new-message", async (data) => {
 		store.dispatch(setNewMessage(data.message, data.sender));
