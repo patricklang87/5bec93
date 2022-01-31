@@ -5,7 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
-  setUnreadMessages
+  setUnreadMsgs
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 import { byMostRecent } from "./helpers/sortingHelper";
@@ -88,7 +88,7 @@ const saveMessage = async (body) => {
 
 const incrementUnread = async (conversationId) => {
   const { data } = await axios.put(`/api/conversations/incrementUnread/${conversationId}`);
-  return data[0][0][0].unreadMessages;
+  return data[0][0][0].unreadMsgs;
 }
 
 export const clearUnreadInDB = async (conversationId) => {
@@ -116,7 +116,7 @@ export const postMessage = (body) => async (dispatch) => {
       dispatch(addConversation(body.recipientId, data.message));
     } else {
       dispatch(setNewMessage(data.message));
-      dispatch(setUnreadMessages(body.conversationId, unreadCount));
+      dispatch(setUnreadMsgs(body.conversationId, unreadCount));
     }
 
     sendMessage(data, body, unreadCount);
@@ -134,11 +134,11 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-//Used to clear unreadMessages when a user selects a new active conversation
-export const clearUnreadMessages = (conversationId) => async (dispatch) => {
+//Used to clear unreadMsgs when a user selects a new active conversation
+export const clearUnreadMsgs = (conversationId) => async (dispatch) => {
   try {
     clearUnreadInDB(conversationId);
-    dispatch(setUnreadMessages(conversationId, 0));
+    dispatch(setUnreadMsgs(conversationId, 0));
     socket.emit("clear-unread", conversationId);
   } catch (error) {
     console.log(error);

@@ -3,7 +3,7 @@ import { Box } from "@material-ui/core";
 import { BadgeAvatar, ChatContent, NewMessageCount } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
-import { clearUnreadMessages } from "../../store/utils/thunkCreators";
+import { clearUnreadMsgs } from "../../store/utils/thunkCreators";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +41,7 @@ const Chat = (props) => {
 
 		//if the last message was sent by the other user, the message count will be cleared when the corresponding conversation is activated
 		if (!sentLastMessage) {
-			await props.clearUnreadMessages(conversation.id);
+			await props.clearUnreadMsgs(conversation.id);
 		}
 	};
 
@@ -54,7 +54,7 @@ const Chat = (props) => {
 				sidebar={true}
 			/>
 			<ChatContent conversation={conversation} />
-			{!sentLastMessage && conversation.unreadMessages > 0 && (
+			{!sentLastMessage && conversation.unreadMsgs > 0 && (
 				<NewMessageCount conversation={conversation} />
 			)}
 		</Box>
@@ -66,8 +66,8 @@ const mapDispatchToProps = (dispatch) => {
 		setActiveChat: (id) => {
 			dispatch(setActiveChat(id));
 		},
-		clearUnreadMessages: (conversationId) => {
-			dispatch(clearUnreadMessages(conversationId));
+		clearUnreadMsgs: (conversationId) => {
+			dispatch(clearUnreadMsgs(conversationId));
 		},
 	};
 };

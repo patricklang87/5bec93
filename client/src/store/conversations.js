@@ -70,10 +70,10 @@ export const addConversation = (recipientId, newMessage) => {
 };
 
 // set the unread messages count when the count is incremented or cleared
-export const setUnreadMessages = (conversationId, unreadMessages) => {
+export const setUnreadMsgs = (conversationId, unreadMsgs) => {
   return {
     type: SET_UNREAD_MESSAGES,
-    payload: { conversationId, unreadMessages }
+    payload: { conversationId, unreadMsgs }
   }
 }
 
@@ -105,7 +105,7 @@ const reducer = (state = [], action) => {
       return setUnreadMessagesInStore(
         state,
         action.payload.conversationId,
-        action.payload.unreadMessages
+        action.payload.unreadMsgs
       )
     default:
       return state;

@@ -6,6 +6,7 @@ const onlineUsers = require("../../onlineUsers");
 // get all conversations for a user, include latest message text for preview, and all messages
 // include other user model so we have info on username/profile pic (don't include current user info)
 router.get("/", async (req, res, next) => {
+<<<<<<< HEAD
   try {
     if (!req.user) {
       return res.sendStatus(401);
@@ -46,6 +47,48 @@ router.get("/", async (req, res, next) => {
         },
       ],
     });
+=======
+	try {
+		if (!req.user) {
+			return res.sendStatus(401);
+		}
+		const userId = req.user.id;
+		const conversations = await Conversation.findAll({
+			where: {
+				[Op.or]: {
+					user1Id: userId,
+					user2Id: userId,
+				},
+			},
+			attributes: ["id", "unreadMsgs"],
+			order: [[Message, "createdAt", "ASC"]],
+			include: [
+				{ model: Message, order: ["createdAt", "ASC"] },
+				{
+					model: User,
+					as: "user1",
+					where: {
+						id: {
+							[Op.not]: userId,
+						},
+					},
+					attributes: ["id", "username", "photoUrl"],
+					required: false,
+				},
+				{
+					model: User,
+					as: "user2",
+					where: {
+						id: {
+							[Op.not]: userId,
+						},
+					},
+					attributes: ["id", "username", "photoUrl"],
+					required: false,
+				},
+			],
+		});
+>>>>>>> parent of 90a1d52 (rename Msgs to Messages)
 
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
@@ -83,7 +126,7 @@ router.get("/", async (req, res, next) => {
 router.put("/incrementUnread/:convoId", async (req, res, next) => {
   const convoId = req.params.convoId;
 	try {
-		const updatedConversation = await Conversation.increment("unreadMessages", {
+		const updatedConversation = await Conversation.increment("unreadMsgs", {
 			where: { id: convoId },
 		});
 		res.json(updatedConversation);
@@ -98,7 +141,7 @@ router.put("/clearUnread/:convoId", async (req, res, next) => {
 	try {
 		const updatedConversation = await Conversation.update(
 			{
-				unreadMessages: 0,
+				unreadMsgs: 0,
 			},
 			{
 				where: { id: convoId },

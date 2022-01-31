@@ -85,11 +85,11 @@ export const addNewConvoToStore = (state, recipientId, message) => {
   return newState;
 };
 
-export const setUnreadMessagesInStore = (state, conversationId, unreadMessages) => {
+export const setUnreadMessagesInStore = (state, conversationId, unreadMsgs) => {
   return state.map((convo) => {
     if (convo.id === conversationId) {
       const newConvo = { ...convo };
-      newConvo.unreadMessages = unreadMessages;
+      newConvo.unreadMsgs = unreadMsgs;
       return newConvo;
     } else {
       return convo;
