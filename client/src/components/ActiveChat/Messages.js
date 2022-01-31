@@ -4,7 +4,7 @@ import { SenderBubble, OtherUserBubble } from "../ActiveChat";
 import moment from "moment";
 
 const Messages = (props) => {
-	const { conversation, userId } = props;
+  const { conversation, userId } = props;
   const { messages, otherUser, unreadMessages } = conversation;
   const [readIndicatorIndex, setReadIndicatorIndex] = useState(messages.length - 1);
 
