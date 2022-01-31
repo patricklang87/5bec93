@@ -4,7 +4,6 @@ import { SenderBubble, OtherUserBubble } from "../ActiveChat";
 import moment from "moment";
 
 const Messages = (props) => {
-<<<<<<< HEAD
   const { conversation, userId } = props;
   const { messages, otherUser, unreadMessages } = conversation;
   const [readIndicatorIndex, setReadIndicatorIndex] = useState(messages.length - 1);
@@ -26,15 +25,6 @@ const Messages = (props) => {
       setReadIndicatorIndex(currentMessageIndex);
     }
   }, [messages, unreadMessages, userId]);
-=======
-	const { conversation, userId } = props;
-  const { messages, otherUser, unreadMsgs } = conversation;
-  const [lastReadMsgIndex, setLastReadMsgIndex] = useState(messages.length - 1);
-
-  useEffect(() => {
-    setLastReadMsgIndex(messages.length - unreadMsgs - 1);
-  }, [messages, unreadMsgs]);
->>>>>>> parent of 90a1d52 (rename Msgs to Messages)
 
 	return (
 		<Box>
