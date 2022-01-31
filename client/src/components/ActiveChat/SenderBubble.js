@@ -25,32 +25,32 @@ const useStyles = makeStyles(() => ({
     background: "#F4F6FA",
     borderRadius: "10px 10px 0 10px"
   },
-	avatar: {
-		height: 20,
-		width: 20,
-		margin: "10px 10px"
-	},
+  avatar: {
+    height: 20,
+    width: 20,
+    margin: 10
+  }
 }));
 
 const SenderBubble = (props) => {
-	const classes = useStyles();
-	const { time, text, otherUser, readIndicatorIndex, msgIndex } = props;
+  const classes = useStyles();
+  const { time, text, otherUser, readIndicatorIndex, msgIndex } = props;
 
-	return (
-		<Box className={classes.root}>
-			<Typography className={classes.date}>{time}</Typography>
-			<Box className={classes.bubble}>
-				<Typography className={classes.text}>{text}</Typography>
-			</Box>
-			{msgIndex === readIndicatorIndex && (
-				<Avatar
-					alt={otherUser.username}
-					src={otherUser.photoUrl}
-					className={classes.avatar}
-				></Avatar>
-			)}
-		</Box>
-	);
+  return (
+    <Box className={classes.root}>
+      <Typography className={classes.date}>{time}</Typography>
+      <Box className={classes.bubble}>
+        <Typography className={classes.text}>{text}</Typography>
+      </Box>
+      {msgIndex === readIndicatorIndex && (
+        <Avatar
+          alt={otherUser.username}
+          src={otherUser.photoUrl}
+          className={classes.avatar}
+        ></Avatar>
+      )}
+    </Box>
+  );
 };
 
 export default SenderBubble;
