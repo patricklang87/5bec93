@@ -126,7 +126,6 @@ async function runSeed() {
   } finally {
     console.log("closing db connection");
     await db.close();
-    ("db connection closed");
   }
 }
 
