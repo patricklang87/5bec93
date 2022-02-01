@@ -1,20 +1,20 @@
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const db = require("../db");
 const Message = require("./message");
 
-const Conversation = db.define("conversation", {});
 
-// find conversation given two user Ids
+const Conversation = db.define("conversation", {
+  name: {
+    type: Sequelize.STRING
+  }
+});
 
-Conversation.findConversation = async function (user1Id, user2Id) {
+// find conversation based on conversation id
+
+Conversation.findConversation = async function (conversationId) {
   const conversation = await Conversation.findOne({
     where: {
-      user1Id: {
-        [Op.or]: [user1Id, user2Id]
-      },
-      user2Id: {
-        [Op.or]: [user1Id, user2Id]
-      }
+      conversationId: id
     }
   });
 
