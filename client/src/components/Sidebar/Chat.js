@@ -22,16 +22,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Chat = (props) => {
-	const [sentLastMessage, setSetSentLastMessage] = useState(true);
+	const [displayUnread, setDisplayUnread] = useState(false);
 	const classes = useStyles();
 	const { conversation } = props;
 	const { otherUser, messages } = conversation;
 
 	useEffect(() => {
-		const userSentLastMessage =
-			otherUser.id !== messages[messages.length - 1]?.senderId;
-		setSetSentLastMessage(userSentLastMessage);
-	}, [messages, otherUser.id]);
+		const userSentLastMessage = otherUser.id !== messages[messages.length - 1]?.senderId;
+    const disUnread = !userSentLastMessage && conversation.unreadMessages > 0;
+		setDisplayUnread(disUnread);
+	}, [messages, otherUser.id, conversation.unreadMessages]);
 
 	const handleClick = async (conversation) => {
 		await props.setActiveChat({
@@ -40,7 +40,7 @@ const Chat = (props) => {
 		});
 
 		//if the last message was sent by the other user, the message count will be cleared when the corresponding conversation is activated
-		if (!sentLastMessage) {
+		if (displayUnread) {
 			await props.clearUnreadMessages(conversation.id);
 		}
 	};
@@ -53,8 +53,8 @@ const Chat = (props) => {
 				online={otherUser.online}
 				sidebar={true}
 			/>
-			<ChatContent conversation={conversation} />
-			{!sentLastMessage && conversation.unreadMessages > 0 && (
+			<ChatContent conversation={conversation} displayUnread={displayUnread} />
+			{displayUnread && (
 				<NewMessageCount conversation={conversation} />
 			)}
 		</Box>
