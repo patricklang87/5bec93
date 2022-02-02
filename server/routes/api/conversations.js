@@ -80,32 +80,65 @@ router.get("/", async (req, res, next) => {
 });
 
 //Increment the "unread" value of a particular conversation
-router.put("/incrementUnread/:convoId", async (req, res, next) => {
+router.put("/:convoId/unread", async (req, res, next) => {
+  if (!req.user) {
+    return res.sendStatus(401);
+  }
+
   const convoId = req.params.convoId;
   try {
+    // confirm user is authorized to update these values
+    const conversation = await Conversation.findOne({ where: { id: convoId } });
+    const { dataValues } = conversation;
+    if (
+      req.user.id !== dataValues.user1Id &&
+      req.user.id !== dataValues.user2Id
+    ) {
+      return res.sendStatus(403);
+    }
+
+    //If authorized, increment the unread messages
     const updatedConversation = await Conversation.increment("unreadMessages", {
       where: { id: convoId },
     });
-    res.json(updatedConversation);
+
+    const [[[updatedConvo]]] = updatedConversation;
+    const { unreadMessages } = updatedConvo;
+
+    res.json(unreadMessages);
   } catch (error) {
     next(error);
   }
 });
 
-//Increment the "unread" value of a particular conversation
-router.put("/clearUnread/:convoId", async (req, res, next) => {
+//Clear the "unread" value of a particular conversation
+router.put("/:convoId/read", async (req, res, next) => {
+  if (!req.user) {
+    return res.sendStatus(401);
+  }
+
   const convoId = req.params.convoId;
   try {
-    const updatedConversation = await Conversation.update(
+    // confirm user is authorized to update these values
+    const conversation = await Conversation.findOne({ where: { id: convoId } });
+    const { dataValues } = conversation;
+    if (
+      req.user.id !== dataValues.user1Id &&
+      req.user.id !== dataValues.user2Id
+    ) {
+      return res.sendStatus(403);
+    }
+
+    //If user is authorized, update values
+    await Conversation.update(
       {
         unreadMessages: 0,
       },
       {
         where: { id: convoId },
-        return: true,
       }
     );
-    res.json(updatedConversation);
+    res.sendStatus(204);
   } catch (error) {
     next(error);
   }
