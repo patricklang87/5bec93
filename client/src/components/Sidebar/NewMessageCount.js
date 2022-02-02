@@ -1,33 +1,30 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Badge } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
-	root: {
-		display: "flex",
-		marginRight: "20px",
-		height: "20px",
-	},
-	text: {
-		padding: "2px 7px",
-		background: "#3F92FF",
-		borderRadius: "10px",
-		fontSize: "10px",
-		fontWeight: 700,
-		color: "#FFFFFF",
-	},
+  root: {
+    display: "flex",
+    marginRight: "20px",
+    height: "20px",
+  }
 }));
 
 const NewMessageCount = (props) => {
-	const classes = useStyles();
-	const { conversation } = props;
+  const classes = useStyles();
+  const { conversation } = props;
 
-	return (
-		<Box className={classes.root}>
-			<Typography className={classes.text}>
-				{conversation.unreadMessages}
-			</Typography>
-		</Box>
-	);
+  return (
+    <Box className={classes.root}>
+      <Badge
+				anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
+				style={{right: 20}}
+        badgeContent={conversation.unreadMessages}
+        color="primary"
+        colorPrimary={"#3F92FF"}
+				max={99}
+      />
+    </Box>
+  );
 };
 
 export default NewMessageCount;

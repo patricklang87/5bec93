@@ -35,7 +35,6 @@ socket.on("connect", () => {
 	});
 
   socket.on("clear-unread", (data) => {
-    console.log("recieved socket clear unread", store.getState());
     store.dispatch(setUnreadMessages(data, 0));
   });
 });

@@ -16,60 +16,59 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     "&:hover": {
-      cursor: "grab"
-    }
-  }
+      cursor: "grab",
+    },
+  },
 }));
 
 const Chat = (props) => {
-	const [displayUnread, setDisplayUnread] = useState(false);
-	const classes = useStyles();
-	const { conversation } = props;
-	const { otherUser, messages } = conversation;
+  const [displayUnread, setDisplayUnread] = useState(false);
+  const classes = useStyles();
+  const { conversation } = props;
+  const { otherUser, messages } = conversation;
 
-	useEffect(() => {
-		const userSentLastMessage = otherUser.id !== messages[messages.length - 1]?.senderId;
+  useEffect(() => {
+    const userSentLastMessage =
+      otherUser.id !== messages[messages.length - 1]?.senderId;
     const disUnread = !userSentLastMessage && conversation.unreadMessages > 0;
-		setDisplayUnread(disUnread);
-	}, [messages, otherUser.id, conversation.unreadMessages]);
+    setDisplayUnread(disUnread);
+  }, [messages, otherUser.id, conversation.unreadMessages]);
 
-	const handleClick = async (conversation) => {
-		await props.setActiveChat({
-			otherUserName: conversation.otherUser.username,
-			otherUserId: conversation.otherUser.id,
-		});
+  const handleClick = async (conversation) => {
+    await props.setActiveChat({
+      otherUserName: conversation.otherUser.username,
+      otherUserId: conversation.otherUser.id,
+    });
 
-		//if the last message was sent by the other user, the message count will be cleared when the corresponding conversation is activated
-		if (displayUnread) {
-			await props.clearUnreadMessages(conversation.id);
-		}
-	};
+    //if the last message was sent by the other user, the message count will be cleared when the corresponding conversation is activated
+    if (displayUnread) {
+      await props.clearUnreadMessages(conversation.id);
+    }
+  };
 
-	return (
-		<Box onClick={() => handleClick(conversation)} className={classes.root}>
-			<BadgeAvatar
-				photoUrl={otherUser.photoUrl}
-				username={otherUser.username}
-				online={otherUser.online}
-				sidebar={true}
-			/>
-			<ChatContent conversation={conversation} displayUnread={displayUnread} />
-			{displayUnread && (
-				<NewMessageCount conversation={conversation} />
-			)}
-		</Box>
-	);
+  return (
+    <Box onClick={() => handleClick(conversation)} className={classes.root}>
+      <BadgeAvatar
+        photoUrl={otherUser.photoUrl}
+        username={otherUser.username}
+        online={otherUser.online}
+        sidebar={true}
+      />
+      <ChatContent conversation={conversation} displayUnread={displayUnread} />
+      {displayUnread && <NewMessageCount conversation={conversation} />}
+    </Box>
+  );
 };
 
 const mapDispatchToProps = (dispatch) => {
-	return {
-		setActiveChat: (id) => {
-			dispatch(setActiveChat(id));
-		},
-		clearUnreadMessages: (conversationId) => {
-			dispatch(clearUnreadMessages(conversationId));
-		},
-	};
+  return {
+    setActiveChat: (id) => {
+      dispatch(setActiveChat(id));
+    },
+    clearUnreadMessages: (conversationId) => {
+      dispatch(clearUnreadMessages(conversationId));
+    },
+  };
 };
 
 export default connect(null, mapDispatchToProps)(Chat);

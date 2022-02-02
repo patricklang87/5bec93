@@ -87,12 +87,12 @@ const saveMessage = async (body) => {
 };
 
 const incrementUnread = async (conversationId) => {
-  const { data } = await axios.put(`/api/conversations/incrementUnread/${conversationId}`);
-  return data[0][0][0].unreadMessages;
+  const unreadMessageCount = await axios.put(`/api/conversations/${conversationId}/unread`);
+  return unreadMessageCount;
 }
 
 export const clearUnreadInDB = async (conversationId) => {
-  await axios.put(`/api/conversations/clearUnread/${conversationId}`);
+  await axios.put(`/api/conversations/${conversationId}/read`);
 }
 
 const sendMessage = (data, body, unreadCount) => {
