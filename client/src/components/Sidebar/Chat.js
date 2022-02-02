@@ -28,8 +28,7 @@ const Chat = (props) => {
   const { otherUser, messages } = conversation;
 
   useEffect(() => {
-    const userSentLastMessage =
-      otherUser.id !== messages[messages.length - 1]?.senderId;
+    const userSentLastMessage = otherUser.id !== messages[messages.length - 1]?.senderId;
     const disUnread = !userSentLastMessage && conversation.unreadMessages > 0;
     setDisplayUnread(disUnread);
   }, [messages, otherUser.id, conversation.unreadMessages]);
