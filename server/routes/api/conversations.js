@@ -1,10 +1,5 @@
 const router = require("express").Router();
-const {
-  User,
-  Conversation,
-  Message,
-  ConvoMembership
-} = require("../../db/models");
+const { User, Conversation, Message } = require("../../db/models");
 const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
 
@@ -15,56 +10,41 @@ router.get("/", async (req, res, next) => {
     if (!req.user) {
       return res.sendStatus(401);
     }
-    console.log("body", req.body.conversationId);
-    const { conversationId } = req.body;
     const userId = req.user.id;
     const conversations = await Conversation.findAll({
       where: {
-        id: conversationId
+        [Op.or]: {
+          user1Id: userId,
+          user2Id: userId,
+        },
       },
-      attributes: ["id", "name"],
+      attributes: ["id"],
       order: [[Message, "createdAt", "ASC"]],
       include: [
         { model: Message, order: ["createdAt", "ASC"] },
         {
-          model: ConvoMembership,
-          attributes: ["unreadMessages", "isCreator"],
-          include: [
-            {
-              model: User,
-              where: {
-                id: {
-                  [Op.not]: userId
-                }
-              },
-              attributes: ["id", "username", "photoUrl"],
-              required: false
-            }
-          ]
-        }
-        // {
-        //   model: User,
-        //   as: "user1",
-        //   where: {
-        //     id: {
-        //       [Op.not]: userId,
-        //     },
-        //   },
-        //   attributes: ["id", "username", "photoUrl"],
-        //   required: false,
-        // },
-        // {
-        //   model: User,
-        //   as: "user2",
-        //   where: {
-        //     id: {
-        //       [Op.not]: userId,
-        //     },
-        //   },
-        //   attributes: ["id", "username", "photoUrl"],
-        //   required: false,
-        // },
-      ]
+          model: User,
+          as: "user1",
+          where: {
+            id: {
+              [Op.not]: userId,
+            },
+          },
+          attributes: ["id", "username", "photoUrl"],
+          required: false,
+        },
+        {
+          model: User,
+          as: "user2",
+          where: {
+            id: {
+              [Op.not]: userId,
+            },
+          },
+          attributes: ["id", "username", "photoUrl"],
+          required: false,
+        },
+      ],
     });
 
     console.log(conversations);
