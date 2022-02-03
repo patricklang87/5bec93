@@ -6,9 +6,9 @@ const Message = require("./message");
 // associations
 
 User.hasMany(ConvoMembership);
-ConvoMembership.belongsTo(User);
+ConvoMembership.belongsTo(User, { as: "user" });
 Conversation.hasMany(ConvoMembership);
-ConvoMembership.belongsTo(Conversation);
+ConvoMembership.belongsTo(Conversation, { as: "conversation"});
 Message.belongsTo(Conversation);
 Conversation.hasMany(Message);
 
