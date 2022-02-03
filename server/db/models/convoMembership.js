@@ -1,7 +1,7 @@
 const { Sequelize } = require("sequelize");
 const db = require("../db");
 
-const ConvoMembership = db.define("convoMembership", {
+const ConvoMembership = db.define("convo_membership", {
   userId: {
     type: Sequelize.INTEGER,
     allowNull: false
